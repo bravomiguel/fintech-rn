@@ -10,14 +10,36 @@ import {
 import { useState } from 'react';
 import { defaultStyles } from '@/constants/Styles';
 import Colors from '@/constants/Colors';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
+import { useSignUp } from '@clerk/clerk-expo';
 
 const Page = () => {
-  const [countryCode, setCountryCode] = useState('+49');
+  const [countryCode, setCountryCode] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 80 : 0;
 
-  const onSignup = async () => {};
+  const router = useRouter();
+
+  const { signUp } = useSignUp();
+
+  const onSignup = async () => {
+    const fullPhoneNumber = `${countryCode}${phoneNumber}`;
+
+    try {
+      await signUp?.create({
+        phoneNumber: fullPhoneNumber,
+      });
+
+      signUp!.preparePhoneNumberVerification();
+
+      router.push({
+        pathname: '/verify/[phone]',
+        params: { phone: fullPhoneNumber },
+      });
+    } catch (err) {
+      console.error('Error signing up', err);
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -35,10 +57,19 @@ const Page = () => {
         <View style={{ flex: 1 }}>
           <View style={styles.inputContainer}>
             <TextInput
-              style={styles.input}
-              placeholder="Country code"
+              style={[styles.input, { minWidth: 80 }]}
+              placeholder="+49"
               placeholderTextColor={Colors.gray}
               value={countryCode}
+              onChangeText={(newText) => {
+                if (newText === '+') {
+                  setCountryCode('');
+                } else if (newText.length > 1) {
+                  setCountryCode(newText);
+                } else {
+                  setCountryCode(`+${newText}`);
+                }
+              }}
             />
             <TextInput
               style={[styles.input, { flex: 1 }]}
