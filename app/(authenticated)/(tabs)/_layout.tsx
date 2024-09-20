@@ -1,5 +1,6 @@
 import Colors from '@/constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 import { Tabs } from 'expo-router';
 
 const Layout = () => {
@@ -7,6 +8,16 @@ const Layout = () => {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors.primary,
+        tabBarBackground: () => <BlurView style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.05)'}} />,
+        tabBarStyle: {
+          backgroundColor: 'transparent',
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          elevation: 0,
+          borderTopWidth: 0,
+        },
       }}
     >
       <Tabs.Screen
@@ -45,7 +56,7 @@ const Layout = () => {
           title: 'Crypto',
           tabBarIcon: ({ size, color }) => (
             <FontAwesome name="bitcoin" size={size} color={color} />
-          )
+          ),
         }}
       />
 
