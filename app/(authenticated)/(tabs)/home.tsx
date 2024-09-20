@@ -7,6 +7,7 @@ import { useBalanceStore } from '@/store/balanceStore';
 import { defaultStyles } from '@/constants/Styles';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
+import WidgetList from '@/components/sortableList/widgetList';
 
 const Page = () => {
   const { balance, runTransaction, transactions, clearTransactions } =
@@ -76,6 +77,10 @@ const Page = () => {
             </View>
           ))}
       </View>
+
+      <Text style={defaultStyles.sectionHeader}>Widgets</Text>
+      <WidgetList />
+      
     </ScrollView>
   );
 };
