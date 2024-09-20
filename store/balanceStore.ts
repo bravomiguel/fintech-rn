@@ -1,12 +1,12 @@
 import { create } from 'zustand';
+import { zustandStorage } from '@/store/mmkv-storage';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { zustandStorage } from './mmkv-storage';
 
 export interface Transaction {
   id: string;
+  title: string;
   amount: number;
   date: Date;
-  title: string;
 }
 
 export interface BalanceState {
@@ -21,11 +21,9 @@ export const useBalanceStore = create<BalanceState>()(
     (set, get) => ({
       transactions: [],
       runTransaction: (transaction: Transaction) => {
-        set((state) => ({
-          transactions: [...state.transactions, transaction],
-        }));
+        set((state) => ({ transactions: [...state.transactions, transaction] }));
       },
-      balance: () => 0,
+      balance: () => get().transactions.reduce((acc, transaction) => acc + transaction.amount, 0),
       clearTransactions: () => {
         set({ transactions: [] });
       },
@@ -33,6 +31,6 @@ export const useBalanceStore = create<BalanceState>()(
     {
       name: 'balance',
       storage: createJSONStorage(() => zustandStorage),
-    },
-  ),
+    }
+  )
 );
