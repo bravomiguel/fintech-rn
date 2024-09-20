@@ -8,10 +8,13 @@ import { defaultStyles } from '@/constants/Styles';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
 import WidgetList from '@/components/sortableList/widgetList';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 const Page = () => {
   const { balance, runTransaction, transactions, clearTransactions } =
     useBalanceStore();
+
+  const headerHeight = useHeaderHeight();
 
   // console.log({ transactions });
 
@@ -27,7 +30,7 @@ const Page = () => {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: Colors.background }}>
+    <ScrollView style={{ backgroundColor: Colors.background }} contentContainerStyle={{paddingTop: headerHeight}}>
       <View style={styles.account}>
         <View style={styles.row}>
           <Text style={styles.balance}>{balance()}</Text>
@@ -80,7 +83,6 @@ const Page = () => {
 
       <Text style={defaultStyles.sectionHeader}>Widgets</Text>
       <WidgetList />
-      
     </ScrollView>
   );
 };
