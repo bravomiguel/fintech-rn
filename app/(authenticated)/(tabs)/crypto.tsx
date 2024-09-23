@@ -1,7 +1,12 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const Page = () => {
+
+  useEffect(() => {
+  
+  }, [])
+  
   return (
     <View>
       <Text>Crypto</Text>
