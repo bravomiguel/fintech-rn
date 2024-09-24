@@ -23,7 +23,7 @@ enum SignInType {
 }
 
 const Page = () => {
-  const [countryCode, setCountryCode] = useState('+49');
+  const [countryCode, setCountryCode] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 80 : 0;
 
@@ -83,10 +83,19 @@ const Page = () => {
 
         <View style={styles.inputContainer}>
           <TextInput
-            style={styles.input}
-            placeholder="Country code"
+            style={[styles.input, { minWidth: 80 }]}
+            placeholder="+49"
             placeholderTextColor={Colors.gray}
             value={countryCode}
+            onChangeText={(newText) => {
+              if (newText === '+') {
+                setCountryCode('');
+              } else if (newText.length > 1) {
+                setCountryCode(newText);
+              } else {
+                setCountryCode(`+${newText}`);
+              }
+            }}
           />
           <TextInput
             style={[styles.input, { flex: 1 }]}
