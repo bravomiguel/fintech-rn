@@ -1,4 +1,4 @@
-interface Currency {
+export interface Currency {
   id: number;
   name: string;
   symbol: string;
@@ -19,11 +19,11 @@ interface Currency {
   quote: Quote;
 }
 
-interface Quote {
+export interface Quote {
   EUR: EUR;
 }
 
-interface EUR {
+export interface EUR {
   price: number;
   volume_24h: number;
   volume_change_24h: number;
@@ -40,10 +40,17 @@ interface EUR {
   last_updated: string;
 }
 
-interface Platform {
+export interface Platform {
   id: number;
   name: string;
   symbol: string;
   slug: string;
   token_address: string;
+}
+
+export interface Ticker {
+  timestamp: string;
+  price: number;
+  volume_24h: number;
+  market_cap: number;
 }

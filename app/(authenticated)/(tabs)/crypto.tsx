@@ -6,6 +6,7 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import Colors from '@/constants/Colors';
 import { defaultStyles } from '@/constants/Styles';
 import { Ionicons } from '@expo/vector-icons';
+import { Currency } from '@/interfaces/crypto';
 
 const Page = () => {
   const headerHeight = useHeaderHeight();
