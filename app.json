@@ -12,6 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.fintechrn"
@@ -21,7 +22,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.fintechrn"
+      "package": "com.anonymous.fintech"
     },
     "web": {
       "bundler": "metro",
@@ -35,8 +36,30 @@
           "origin": "https://galaxies.dev"
         }
       ],
-      "expo-asset",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID."
+        }
+      ],
+      [
+        "expo-dynamic-app-icon",
+        {
+          "default": {
+            "image": "./assets/images/icon.png",
+            "prerendered": true
+          },
+          "dark": {
+            "image": "./assets/images/icon-dark.png",
+            "prerendered": true
+          },
+          "vivid": {
+            "image": "./assets/images/icon-vivid.png",
+            "prerendered": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
