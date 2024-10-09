@@ -1,11 +1,27 @@
 import { View, Text, StyleSheet, Image, TextInput } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth, useUser } from '@clerk/clerk-expo';
 import { BlurView } from 'expo-blur';
 import Colors from '@/constants/Colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { getAppIcon, setAppIcon } from 'expo-dynamic-app-icon';
+
+const ICONS = [
+  {
+    name: 'Default',
+    icon: require('@/assets/images/icon.png'),
+  },
+  {
+    name: 'Dark',
+    icon: require('@/assets/images/icon-dark.png'),
+  },
+  {
+    name: 'Vivid',
+    icon: require('@/assets/images/icon-vivid.png'),
+  },
+];
 
 export default function Page() {
   const { user } = useUser();
@@ -14,9 +30,11 @@ export default function Page() {
   const [lastName, setLastName] = useState(user?.lastName);
   const [edit, setEdit] = useState(false);
 
+  const [activeIcon, setActiveIcon] = useState('Default');
+
   const onSaveUser = async () => {
     try {
-      await user?.update({firstName: firstName!, lastName: lastName!});
+      await user?.update({ firstName: firstName!, lastName: lastName! });
       setEdit(false);
     } catch (error) {
       console.error(error);
@@ -38,9 +56,23 @@ export default function Page() {
       const base64 = `data:image/png;base64,${result.assets[0].base64}`;
       user?.setProfileImage({
         file: base64,
-      })
+      });
     }
   };
+
+  const onChangeAppIcon = async (icon: string) => {
+    await setAppIcon(icon.toLowerCase());
+    setActiveIcon(icon);
+  };
+
+  useEffect(() => {
+    const loadCurrentIconPref = async () => {
+      const icon = await getAppIcon();
+      console.log({ icon });
+      setActiveIcon(icon);
+    };
+    loadCurrentIconPref();
+  }, []);
 
   return (
     <BlurView
@@ -50,7 +82,9 @@ export default function Page() {
     >
       <View style={{ alignItems: 'center' }}>
         <TouchableOpacity onPress={onCaptureImage} style={styles.captureBtn}>
-          {user?.imageUrl && <Image source={{uri: user?.imageUrl}} style={styles.avatar} />}
+          {user?.imageUrl && (
+            <Image source={{ uri: user?.imageUrl }} style={styles.avatar} />
+          )}
         </TouchableOpacity>
 
         <View style={{ flexDirection: 'row', gap: 6 }}>
@@ -108,18 +142,20 @@ export default function Page() {
               paddingHorizontal: 10,
               borderRadius: 10,
               justifyContent: 'center',
-            }}>
+            }}
+          >
             <Text style={{ color: '#fff', fontSize: 12 }}>14</Text>
           </View>
         </TouchableOpacity>
       </View>
 
-      {/* <View style={styles.actions}>
+      <View style={styles.actions}>
         {ICONS.map((icon) => (
           <TouchableOpacity
             key={icon.name}
             style={styles.btn}
-            onPress={() => onChangeAppIcon(icon.name)}>
+            onPress={() => onChangeAppIcon(icon.name)}
+          >
             <Image source={icon.icon} style={{ width: 24, height: 24 }} />
             <Text style={{ color: '#fff', fontSize: 18 }}>{icon.name}</Text>
             {activeIcon.toLowerCase() === icon.name.toLowerCase() && (
@@ -127,7 +163,7 @@ export default function Page() {
             )}
           </TouchableOpacity>
         ))}
-      </View> */}
+      </View>
     </BlurView>
   );
 }
